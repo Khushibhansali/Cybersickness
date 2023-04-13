@@ -1,0 +1,57 @@
+<html>
+  <head>
+      <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Create a loop with 100 iterations to generate 100 random dots -->
+      <a-entity id="dotsContainer">
+        <a-entity id="dotTemplate" geometry="primitive: sphere; radius: 0.02" material="color: white"></a-entity>
+      </a-entity>
+    
+      <a-assets>
+        <!-- Load a texture with dots -->
+        <img id="dotTexture" src="https://path/to/your/dot/texture.png">
+      </a-assets>
+        <a-box position="0 0.5 -15" rotation="0 0 0" color="#4CC3D9">
+        <a-animation attribute="position"
+                     from="0 0.5 -15"
+                     to="-5 0.5 -5"
+                     direction="alternate"
+                     dur="20"
+                     repeat="indefinite"></a-animation>
+            
+         <!-- Set the material to use the dot texture -->
+<!--         <a-mesh-standard-material attach="material" color="#ffffff" map="#dotTexture"></a-mesh-standard-material>-->
+         </a-box>
+         <a-sky color="#000"></a-sky>
+    </a-scene>
+    <script>
+
+      AFRAME.registerComponent('random-dots', {
+        init: function () {
+          var dotsContainer = document.getElementById('dotsContainer');
+          var dotTemplate = document.getElementById('dotTemplate');
+
+          // Generate 100 random dots
+          for (var i = 0; i < 10000; i++) {
+            var dot = dotTemplate.cloneNode(true);
+            dot.setAttribute('position', {
+              x: Math.random() * 100 - 50, // Random x position between -50 and 50
+              y: Math.random() * 100 - 50, // Random y position between -50 and 50
+              z: -20 // Random z position between -20 and 0
+            });
+            dotsContainer.appendChild(dot);
+          }
+        }
+      });
+    
+      document.querySelector('a-box').setAttribute('random-dots', '');
+
+      // Add the 'random-dots' component to the scene
+      document.querySelector('a-scene').setAttribute('random-dots', '');
+        
+    </script>
+  </body>
+</html>
+
