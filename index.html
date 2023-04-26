@@ -1,6 +1,7 @@
+<!DOCTYPE html>
 <html>
   <head>
-      <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   </head>
   <body>
     <a-scene>
@@ -8,50 +9,82 @@
       <a-entity id="dotsContainer">
         <a-entity id="dotTemplate" geometry="primitive: sphere; radius: 0.02" material="color: white"></a-entity>
       </a-entity>
-    
-      <a-assets>
-        <!-- Load a texture with dots -->
-        <img id="dotTexture" src="https://path/to/your/dot/texture.png">
-      </a-assets>
-        <a-box position="0 0.5 -15" rotation="0 0 0" color="#4CC3D9">
-        <a-animation attribute="position"
-                     from="0 0.5 -15"
-                     to="-5 0.5 -5"
-                     direction="alternate"
-                     dur="20"
-                     repeat="indefinite"></a-animation>
-            
-         <!-- Set the material to use the dot texture -->
-<!--         <a-mesh-standard-material attach="material" color="#ffffff" map="#dotTexture"></a-mesh-standard-material>-->
-         </a-box>
-         <a-sky color="#000"></a-sky>
+      <a-entity id="dotsContainer2" random-dots-cube>    
+        <a-box id="dotsOnCube" position="0 0.5 -15" geometry="width: 1; height: 1; depth: 1" rotation="0 0 0" color="#190CFC" animation="property:position; to: 0 0.5 -11; dur: 8000; easing: linear; dir: alternate; loop: true;"></a-box>
+      </a-entity>
+
+      <a-sky color="#000"></a-sky>
     </a-scene>
     <script>
+      // Generate 10000 random dots
+      function generateRandomDots(container, template, count, xpos, adjust, zpos) {
+        for (var i = 0; i < count; i++) {
+          var dot = template.cloneNode(true);
+          dot.setAttribute('position', {
+            x: Math.random() * xpos - adjust, // Random x position between -50 and 50
+            y: Math.random() * xpos - adjust, // Random y position between -50 and 50
+            z: zpos // Random z position between -20 and 0
+          });
+          container.appendChild(dot);
+        }
+      }
+ 
+    function generateRandomDots2(container, template, count, width, height, depth, position) {
+      var halfWidth = width / 2;
+      var halfHeight = height / 2;
+      var halfDepth = depth / 2;
+
+      for (var i = 0; i < count; i++) {
+        var dot = template.cloneNode(true);
+        dot.setAttribute('position', {
+          x: Math.random() * width - halfWidth + position.x,
+          y: Math.random() * height - width*0.2 + position.y-0.2,
+          z: Math.random() * depth + position.z + 0.7
+        });
+        container.appendChild(dot);
+      }
+    }
+
 
       AFRAME.registerComponent('random-dots', {
         init: function () {
           var dotsContainer = document.getElementById('dotsContainer');
           var dotTemplate = document.getElementById('dotTemplate');
-
-          // Generate 100 random dots
-          for (var i = 0; i < 10000; i++) {
-            var dot = dotTemplate.cloneNode(true);
-            dot.setAttribute('position', {
-              x: Math.random() * 100 - 50, // Random x position between -50 and 50
-              y: Math.random() * 100 - 50, // Random y position between -50 and 50
-              z: -20 // Random z position between -20 and 0
-            });
-            dotsContainer.appendChild(dot);
-          }
+          generateRandomDots(dotsContainer, dotTemplate, 10000, 100, 50, -20);
         }
       });
-    
-      document.querySelector('a-box').setAttribute('random-dots', '');
+        AFRAME.registerComponent('random-dots-cube', {
+          init: function () {
+            var dotsContainer = document.getElementById('dotsContainer2');
+            var dotTemplate = document.getElementById('dotTemplate');
+            var cube = document.getElementById('dotsOnCube');
+            var position = cube.getAttribute('position');
+            generateRandomDots2(dotsContainer, dotTemplate, 30, 1, 1, 1, position);
+            this.prevPosition = position;
+            this.direction = 1; // initial direction of movement is forward
+          },
+          tick: function () {
+            var dots = document.querySelectorAll('#dotsContainer2 > *');
+            var cube = document.getElementById('dotsOnCube');
+            var position = cube.getAttribute('position');
 
-      // Add the 'random-dots' component to the scene
+            for (var i = 0; i < dots.length; i++) {
+              var dot = dots[i];
+              dot.setAttribute('position', {
+                x: dot.getAttribute('position').x + (position.x - this.prevPosition.x),
+                y: dot.getAttribute('position').y + (position.y - this.prevPosition.y),
+                z: dot.getAttribute('position').z + (position.z - this.prevPosition.z)
+              });
+            }
+
+            this.prevPosition = { x: position.x, y: position.y, z: position.z };
+          }
+        });
+
+  
+      // Add the 'random-dots' and 'random-dots-cube' components to the scene
+      document.querySelector('a-scene').setAttribute('random-dots-cube', '');
       document.querySelector('a-scene').setAttribute('random-dots', '');
-        
     </script>
   </body>
 </html>
-
