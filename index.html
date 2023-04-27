@@ -12,8 +12,11 @@
         <a-entity id="dotsContainer">
         <a-entity id="dotTemplate" geometry="primitive: sphere; radius: 0.02" material="color: white"></a-entity>
         </a-entity>
+        
+        <!---original position movement was from -14 to -13-->
+        
         <a-entity id="dotsContainer2" random-dots-cube>    
-        <a-box id="dotsOnCube" position="0 -0.5 -14" geometry="width: 9; height: 9; depth: 9" rotation="0 0 0" color="#000" animation="property:position; to: 0 -0.5 -13; dur: 10000; easing: linear; dir: alternate; loop: true;"></a-box>
+        <a-box id="dotsOnCube" position="0 -0.5 -15" geometry="width: 5; height: 5; depth: 2" rotation="0 0 0" color="#000" animation="property:position; to: 0 -0.5 -10; dur: 10000; easing: linear; dir: alternate; loop: true;"></a-box>
         </a-entity>
 
         <a-sky color="#000"></a-sky>
@@ -45,7 +48,12 @@
           y: Math.random() * height - position.y-5,
           z: Math.random() * depth + position.z + 5
         });
-        console.log(dot.y);
+        
+        // generate a random hex color
+        var color = '#' + Math.floor(Math.random() * 16777215).toString(16); 
+        // set the dot's material color to the random color
+        dot.setAttribute('material', 'color', color); 
+
         container.appendChild(dot);
       }
     }
