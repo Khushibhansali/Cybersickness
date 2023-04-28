@@ -16,7 +16,7 @@
         <!---original position movement was from -14 to -13-->
         
         <a-entity id="dotsContainer2" random-dots-cube>    
-        <a-box id="dotsOnCube" position="0 -0.5 -15" geometry="width: 5; height: 5; depth: 2" rotation="0 0 0" color="#000" animation="property:position; to: 0 -0.5 -10; dur: 10000; easing: linear; dir: alternate; loop: true;"></a-box>
+        <a-box id="dotsOnCube" position="0 -0.5 -20" geometry="width: 5; height: 5; depth: 2" rotation="0 0 0" color="#000" animation="property:position; to: 0 -0.5 -15; dur: 10000; easing: linear; dir: alternate; loop: true;"></a-box>
         </a-entity>
 
         <a-sky color="#000"></a-sky>
@@ -50,7 +50,8 @@
         });
         
         // generate a random hex color
-        var color = '#' + Math.floor(Math.random() * 16777215).toString(16); 
+        var color = '#' + (Math.floor(Math.random() * 100) + 64).toString(16) + (Math.floor(Math.random() * 100) + 64).toString(16) + (Math.floor(Math.random() * 100) + 64).toString(16);
+ 
         // set the dot's material color to the random color
         dot.setAttribute('material', 'color', color); 
 
@@ -63,7 +64,9 @@
         init: function () {
           var dotsContainer = document.getElementById('dotsContainer');
           var dotTemplate = document.getElementById('dotTemplate');
-          generateRandomDots(dotsContainer, dotTemplate, 10000, 100, 50, -20);
+        
+          //container, template, count, xpos, adjust, zpos
+          generateRandomDots(dotsContainer, dotTemplate, 50000, 100, 70, -20);
         }
       });
         
